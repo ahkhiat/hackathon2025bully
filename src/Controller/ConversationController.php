@@ -11,10 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ConversationController extends AbstractController
 {
-    #[Route('/api/conversations', name: 'api_conversations', methods: ['GET'])]
+
+#[Route('/api/conversations', name: 'api_conversations', methods: ['GET'])]
 public function getUserConversations(ConversationRepository $conversationRepository): JsonResponse
 {
-    $user = $this->getUser(); // Récupère l'utilisateur connecté
+    $user = $this->getUser();
     $conversations = $conversationRepository->findBy(['user' => $user]);
 
     $result = [];
@@ -23,15 +24,19 @@ public function getUserConversations(ConversationRepository $conversationReposit
         $formattedMessages = [];
         $messages = $conversation->getMessages()->toArray();
 
-        for ($i = 0; $i < count($messages); $i++) {
-            $message = $messages[$i];
+        // 1️⃣ Stocker les réponses par ID de question
+        $responsesByMessageId = [];
 
+        foreach ($messages as $message) {
+            if ($message->isChatResponse() && $message->getRepliesTo()) {
+                $responsesByMessageId[$message->getRepliesTo()->getId()] = $message;
+            }
+        }
+
+        // 2️⃣ Construire les messages et attacher les bonnes réponses
+        foreach ($messages as $message) {
             if (!$message->isChatResponse()) {
-                $response = null;
-
-                if (isset($messages[$i + 1]) && $messages[$i + 1]->isChatResponse() && $messages[$i + 1]->getRepliesTo() === $message) {
-                    $response = $messages[$i + 1];
-                }
+                $response = $responsesByMessageId[$message->getId()] ?? null;
 
                 $formattedMessages[] = [
                     'promptUser' => [
