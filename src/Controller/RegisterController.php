@@ -36,6 +36,9 @@ final class RegisterController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
+        // dump($request->getContent()); 
+        // die();
+
         if (!is_array($data)) {
             return $this->json(['error' => 'Données invalides ou manquantes.'], 400);
         }
