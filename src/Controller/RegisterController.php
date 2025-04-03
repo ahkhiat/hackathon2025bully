@@ -39,6 +39,10 @@ final class RegisterController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
+        if (empty($data['email']) || empty($data['password'])) {
+            return $this->json(['error' => 'Email et mot de passe sont requis.'], 400);
+        }
+
         $registerDto = new RegisterDto();
         $registerDto->password = $data['password'];
         $registerDto->email = $data['email'];
@@ -75,7 +79,7 @@ final class RegisterController extends AbstractController
         $user->setBirthdate($registerDto->birthdate);
         $user->setCity($registerDto->city);
         $user->setRoles(['ROLE_USER']);         
-        
+
         $hashedPassword = $passwordHasher->hashPassword($user, $registerDto->password);
         $user->setPassword($hashedPassword);
 
