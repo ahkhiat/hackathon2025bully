@@ -53,6 +53,7 @@ public function getUserConversations(ConversationRepository $conversationReposit
 
         $result[] = [
             'id' => $conversation->getId(),
+            'user_id' => $message->getConversation()->getUser()->getId(),
             'title' => $conversation->getTitle(),
             'created_at' => $conversation->getCreatedAt()->format('Y-m-d H:i:s'),
             'messages' => $formattedMessages,
