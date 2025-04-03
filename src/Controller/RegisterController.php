@@ -19,7 +19,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 final class RegisterController extends AbstractController
 {
-   
     public function __construct(
         private EntityManagerInterface $entityManager, 
         UserPasswordHasherInterface $passwordHasher, 
