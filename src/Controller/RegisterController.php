@@ -39,9 +39,6 @@ final class RegisterController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        dump($data);
-        die;
-
         $registerDto = new RegisterDto();
         $registerDto->password = $data['password'];
         $registerDto->email = $data['email'];
