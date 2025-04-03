@@ -24,10 +24,7 @@ final class RegisterController extends AbstractController
         private EntityManagerInterface $entityManager, 
         UserPasswordHasherInterface $passwordHasher, 
         ValidatorInterface $validator,
-    ) {
-        $this->passwordHasher = $passwordHasher;
-        $this->validator = $validator;
-    }
+    ) { }
 
 
     #[Route('/api/register', name: 'api_register')]
@@ -46,7 +43,11 @@ final class RegisterController extends AbstractController
         $registerDto->lastname = $data['lastname'];
 
         if (!empty($data['birthdate'])) {
-            $registerDto->birthdate = new \DateTime($data['birthdate']);
+            try {
+                $registerDto->birthdate = new \DateTime($data['birthdate']);
+            } catch (\Exception $e) {
+                return $this->json(['error' => 'Format de date invalide, attendu : YYYY-MM-DD'], 400);
+            }
         }
         $registerDto->city = $data['city'];
 
@@ -66,7 +67,7 @@ final class RegisterController extends AbstractController
                                 ->findOneBy(['email' => $registerDto->email]);
         if ($existingUser) {
             return $this->json(['error' => 'L\'email est déjà utilisé.'], 400);
-    }
+        }
 
         $user = new User();
         $user->setEmail($registerDto->email);
