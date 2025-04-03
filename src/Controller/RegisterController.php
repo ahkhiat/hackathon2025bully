@@ -36,8 +36,15 @@ final class RegisterController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        // dump($request->getContent()); 
-        // die();
+        if (!$data) {
+            return new JsonResponse([
+                'error' => 'JSON invalide',
+                'raw_content' => $request->getContent(),
+                'error_message' => json_last_error_msg(),
+            ], 400);
+        }
+        
+    
 
         if (!is_array($data)) {
             return $this->json(['error' => 'Données invalides ou manquantes.'], 400);
@@ -72,6 +79,7 @@ final class RegisterController extends AbstractController
 
         $existingUser = $manager->getRepository(User::class)
                                 ->findOneBy(['email' => $registerDto->email]);
+
         if ($existingUser) {
             return $this->json(['error' => 'L\'email est déjà utilisé.'], 400);
         }
