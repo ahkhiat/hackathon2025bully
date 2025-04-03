@@ -41,6 +41,7 @@ public function getUserConversations(ConversationRepository $conversationReposit
                 $formattedMessages[] = [
                     'promptUser' => [
                         'id' => $message->getId(),
+                        'created_at' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
                         'content' => $message->getContent(),
                         'response' => $response ? [
                             'id' => $response->getId(),
