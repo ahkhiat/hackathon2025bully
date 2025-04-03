@@ -1,7 +1,17 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
+    formats:
+        json:
+            mime_types: ['application/json']
     defaults:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+        attributes:
+            force_jsonld: false
+
+            jsonld_context: false
+    collection:
+        pagination:
+            enabled: false
