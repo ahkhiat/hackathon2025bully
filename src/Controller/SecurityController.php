@@ -19,7 +19,6 @@ class SecurityController extends AbstractController
             return new JsonResponse(['error' => 'Invalid credentials'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
-        // Générer le token JWT pour l'utilisateur authentifié
         $token = $jwtManager->create($user);
 
         return new JsonResponse([
