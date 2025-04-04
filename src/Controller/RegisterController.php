@@ -99,9 +99,17 @@ final class RegisterController extends AbstractController
 
         $token = $jwtManager->create($user);
 
-        return $this->json([
-            'token' => $token
-        ], 201);
+        return new JsonResponse([
+            'token' => $token,
+            'user' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'firstname' => $user->getFirstname(),
+                'lastname' => $user->getLastname(),
+                'birthdate' => $user->getBirthdate()->format('Y-m-d'),
+                'city' => $user->getCity(),
+            ],
+        ]);
     }
 
 }
